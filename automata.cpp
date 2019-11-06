@@ -48,10 +48,25 @@ cout << endl;
 
 void ruleCreation() {
   int rule;
-  cout << "What rule do you want to use? (0-255?)";
-  cin >> rule;
+  int error;
+
 
   convertToBinary(rule);
+
+
+  do
+{
+    error = 0;
+  cout << "What rule do you want to use? (0-255?) ";
+  cin >> rule;
+    if (cin.fail())
+    {
+        cout << "Please enter a valid integer" << endl;
+        error = 1;
+        cin.clear();
+        cin.ignore(80, '\n');
+    }
+}while(error == 1 || rule<0 || rule>255);
 }
 
 
