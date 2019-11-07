@@ -1,4 +1,6 @@
 
+/* Cellular Auotmata Program by
+Gina Fenton (180012673) Skye Kirwan(190012694), Harry Jamieson() */
 
 #include <iostream>
 #include <iostream>
@@ -13,7 +15,7 @@ bool writeToFile = true;
 int binary[8];
 
 
-
+//binary converter to store decimal numbers as binary in the global variable for future functions to use
 void convertToBinary(int decimal)
 {
 
@@ -46,30 +48,70 @@ cout << endl;
 }
 
 
+//lets the user choose the rule they want and passes it to the binary converter
 void ruleCreation() {
   int rule;
-  int error;
+  int error, error2;
 
-
-  convertToBinary(rule);
-
-
-  do
-{
-    error = 0;
-  cout << "What rule do you want to use? (0-255?) ";
-  cin >> rule;
-    if (cin.fail())
+    int selection;
+  cout<<"\n1. Choose rule to use";
+  cout<<"\n2. Pick random rule";
+  cout<<"\n3. Exit program";
+  cout<<"\nEnter selection: ";
+  
+  do {
+  error2 = 0;
+  // read the input
+  cin>>selection;
+   if (cin.fail())
     {
-        cout << "Please enter a valid integer" << endl;
-        error = 1;
+        cout << "Please enter a valid integer (1-3)" << endl;
+        error2 = 1;
         cin.clear();
         cin.ignore(80, '\n');
+        cin>>selection;
     }
-}while(error == 1 || rule<0 || rule>255);
+
+    if (selection == 1) {
+
+         do
+           {
+           error = 0;
+           cout << "What rule do you want to use? (0-255?) ";
+           cin >> rule;
+            if (cin.fail()) {
+             cout << "Please enter a valid integer" << endl;
+             error = 1;
+             cin.clear();
+              cin.ignore(80, '\n');
+            }
+       } while(error == 1 || rule<0 || rule>255);
+
+       convertToBinary(rule);
+    }
+
+    else if (selection == 2) {
+        //loop through empty bitset and populate randomly
+      for (int i = 0; i <SIZE; i++)
+      {
+        //assign random int either 1 or 0
+      binary[i] = std::experimental::randint(0,1);
+      cout<<binary[i];
+      }
+      cout<<"\n";
+    }
+
+    else if (selection == 3) {
+      exit(1);
+
+    } else {
+      error2=1;
+      cout<<"\nThat is not a valid selection, try again (1-4)";
+    }
+
+  }while(error2 == 1);
+
 }
-
-
 
 //user making first generation themself - bit by bit
 bitset<SIZE> userMakeFirstGen()
@@ -157,9 +199,16 @@ bitset<SIZE> generateFirstGenRandomly()
 //containts all combinations for the automata rules and generates new lines
 bitset<SIZE> nextGen(bitset<SIZE>x_old)
 {
+  //'x_old' = parent 'x' = child 
 	writeGenToFile(x_old);
   bitset<SIZE> x;
 
+  // Rules:
+  //  111  110  101  100  011  010  001  000
+
+//checks the binary number (holding the rule picked by user) for 0 or 1
+//each item in array corresponds to different rule
+//if the item in array is 0, the rule creates a 0, if 1 then the rule creates a 1
 
 for (int i = 0; i<SIZE-1; i++) {
           // 111 parent generates 0 child if binary[0] (rule 1) is 0
@@ -237,6 +286,7 @@ for (int i = 0; i<SIZE-1; i++) {
   return x;
   }
 
+//runs the generating process with user inputs 
 void runGen() {
      string filename;
     
@@ -246,7 +296,6 @@ void runGen() {
 
     int gens = 0;
     int error, error2;
-
 
 // input validation loop
 do
@@ -329,8 +378,6 @@ do {
    
 }
 
-
-
 void menu() {
 int selection;
 int error;
@@ -339,8 +386,9 @@ cout<<"\n Menu";
 cout<<"\n========";
 cout<<"\n 1. Run";
 cout<<"\n 2. Game of life";
-cout<<"\n 3. Turn save off/on";
-cout<<"\n 4. Exit\n";
+cout<<"\n 3. Turn automatic save off/on";
+cout<<"\n 4. Convert binary or decimal numbers";
+cout<<"\n 5. Exit\n";
 cout<<"\nEnter selection: ";
 
 // read the input
@@ -376,7 +424,9 @@ if (writeToFile == true) {
   {cout<<"\n Auto save is now ON";}
 }
 break;
-case 4 :{cout<<"\n Goodbye! ";}
+case 4:{cout<<"\nConvert numbers";}
+break;
+case 5 :{cout<<"\n Goodbye! ";}
 exit(0);
 break;
 
