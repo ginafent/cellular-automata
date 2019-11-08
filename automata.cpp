@@ -279,6 +279,7 @@ for (int i = 0; i<SIZE-1; i++) {
   //print out new gen
   for (int j=0; j< x.size(); j++)
   { 
+
     cout << x[j];
   }
   cout << endl;
@@ -295,7 +296,31 @@ void runGen() {
     bitset<SIZE> def(string("000010000"));
 
     int gens = 0;
-    int error, error2;
+    int error, error2, selection;
+
+
+  cout<<"\nDo you want to generate the automata line by line? ";
+  cout<<"\n1. Yes, line by line generation";
+  cout<<"\n2. No, full generation displayed\n";
+
+  cout<<"\nEnter Selection: \n";
+
+  do {
+  error2 = 0;
+  cin>>selection;
+
+   if (cin.fail() || selection<1 || selection>2)
+    {
+        cout << "Please enter a valid integer (1-2)" << endl;
+        error = 1;
+        cin.clear();
+        cin.ignore(80, '\n');
+    }
+  } while (error2 == 1 || selection<1 || selection>2);
+
+
+
+
 
 // input validation loop
 do
@@ -320,38 +345,39 @@ do
 
 
   //2 choices for first generation (user pick how they want it made at start)
-  int selection;
-  cout<<"\n1. Generate random first gen";
+  int selection2;
+  cout<<"\n1. Generate random first generation";
   cout<<"\n2. Create your own first generation";
   cout<<"\n3. Generate default first generation";
   cout<<"\n4. Exit program\n";
   cout<<"\nEnter selection: ";
+
 do {
 
   error2 = 0;
   // read the input
-  cin>>selection;
+  cin>>selection2;
    if (cin.fail())
     {
         cout << "Please enter a valid integer (1-4)" << endl;
         error = 1;
         cin.clear();
         cin.ignore(80, '\n');
-        cin>>selection;
+        cin>>selection2;
     }
 
-    if (selection == 1) {
+    if (selection2 == 1) {
         x_old = generateFirstGenRandomly();
     }
 
-    else if (selection == 2) {
+    else if (selection2 == 2) {
       x_old = userMakeFirstGen();
     }
 
-    else if (selection == 3) {
+    else if (selection2 == 3) {
       x_old = def;
 
-    } else if (selection == 4) {
+    } else if (selection2 == 4) {
       exit(1);
 
     } else {
@@ -378,6 +404,57 @@ do {
    
 }
 
+void convertNums() {
+  int error, selection, error2, num;
+
+cout<<"\n 1. Convert Binary to Decimal";
+cout<<"\n 2. Convert Decimal to Binary\n";
+
+  cin>>selection;
+do {
+  error=0;
+  if (cin.fail())
+    {
+        cout << "Please enter a valid integer (1 or 2)" << endl;
+        error = 1;
+        cin.clear();
+        cin.ignore(80, '\n');
+        cin>>selection;
+    }
+}while(error == 1);
+
+switch(selection) {
+
+case 1 :{cout<<"\n b -d";}
+break;
+case 2 :
+
+//validating the number entered
+do
+{
+    error2 = 0;
+    cout<<"\nEnter decimal number between 0 and 255\n";
+    cin >> num;
+    if (cin.fail())
+    {
+        cout << "\nPlease enter a valid integer\n" << endl;
+        error2 = 1;
+        cin.clear();
+        cin.ignore(80, '\n');
+    }
+
+}while(error2 == 1 || num<0 || num>255);
+
+convertToBinary(num);
+break;
+
+// other than A, M, D and X...
+default : cout<<"\n Invalid selection"; }
+// no break in the default case
+}
+
+
+//the menu for the main program
 void menu() {
 int selection;
 int error;
@@ -397,7 +474,7 @@ do {
   error=0;
   if (cin.fail())
     {
-        cout << "Please enter a valid integer (1-4)" << endl;
+        cout << "Please enter a valid integer (1-5)" << endl;
         error = 1;
         cin.clear();
         cin.ignore(80, '\n');
@@ -424,7 +501,8 @@ if (writeToFile == true) {
   {cout<<"\n Auto save is now ON";}
 }
 break;
-case 4:{cout<<"\nConvert numbers";}
+case 4:
+convertNums();
 break;
 case 5 :{cout<<"\n Goodbye! ";}
 exit(0);
