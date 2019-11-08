@@ -3,7 +3,7 @@
 Gina Fenton (180012673) Skye Kirwan(190012694), Harry Jamieson() */
 
 #include <iostream>
-#include <iostream>
+#include <cstdio>
 #include <fstream>
 #include <bitset>
 #include <algorithm> //for reverse()
@@ -11,9 +11,43 @@ Gina Fenton (180012673) Skye Kirwan(190012694), Harry Jamieson() */
 #define SIZE 8
 using namespace std;
 bool writeToFile = true;
+bool lineByline = true;
 //array for binary
 int binary[8];
 
+void convertToDecimal(bitset<SIZE> binary)
+{
+
+  int decimal = 0;
+
+
+  for (int i=0; i<SIZE; i++)
+  {
+    // for each binary number 
+    if (binary[i] == 1)
+    {
+      int equivallent;
+      //find the decimal equivallent from position i
+      if (i == 0)
+      { 
+        equivallent = 1;
+      }
+      else
+      {
+        equivallent = 2 << (i-1);
+      }
+      if (binary[i] == 1)
+      {
+        decimal = decimal + equivallent;
+      }
+
+    }
+
+  }
+
+  cout << "Your binary number converted to decimal is: " << decimal << endl;
+
+}
 
 //binary converter to store decimal numbers as binary in the global variable for future functions to use
 void convertToBinary(int decimal)
@@ -282,7 +316,9 @@ for (int i = 0; i<SIZE-1; i++) {
 
     cout << x[j];
   }
-  cout << endl;
+  if (lineByline == false) {
+  cout << endl; 
+}
 
   return x;
   }
@@ -297,7 +333,6 @@ void runGen() {
 
     int gens = 0;
     int error, error2, selection;
-
 
   cout<<"\nDo you want to generate the automata line by line? ";
   cout<<"\n1. Yes, line by line generation";
@@ -319,9 +354,75 @@ void runGen() {
   } while (error2 == 1 || selection<1 || selection>2);
 
 
+//line by line selected
+if (selection==1) {
+lineByline = true;
+      if (writeToFile == true) { //set to true but should ask user at start
+  cout << "\nChoose a new name to create a new file, or an existing name to add to that file\n";
+  cout << "Name of file to save to: ";
+  cin >> filename; }
 
 
+  //2 choices for first generation (user pick how they want it made at start)
+  int selection2;
+  cout<<"\n1. Generate random first generation";
+  cout<<"\n2. Create your own first generation";
+  cout<<"\n3. Generate default first generation";
+  cout<<"\n4. Exit program\n";
+  cout<<"\nEnter selection: ";
 
+do {
+
+  error2 = 0;
+  // read the input
+  cin>>selection2;
+   if (cin.fail())
+    {
+        cout << "Please enter a valid integer (1-4)" << endl;
+        error = 1;
+        cin.clear();
+        cin.ignore(80, '\n');
+        cin>>selection2;
+    }
+
+    if (selection2 == 1) {
+        x_old = generateFirstGenRandomly();
+    }
+
+    else if (selection2 == 2) {
+      x_old = userMakeFirstGen();
+    }
+
+    else if (selection2 == 3) {
+      x_old = def;
+
+    } else if (selection2 == 4) {
+      exit(1);
+
+    } else {
+      error2=1;
+      cout<<"\nThat is not a valid selection, try again (1-4)";
+    }
+
+  }while(error2 == 1);
+
+#define KEY_DOWN 80
+int c = ',';
+cout<<"Press the space bar to generate the next line or the full stop key to exit";
+
+do {
+c = getchar();
+if (c == ' ') {
+    //make gen
+      x = nextGen(x_old);
+      x_old = x;
+  } 
+} while (c != '.');
+
+// full display
+} else if (selection==2) {
+
+lineByline = false;
 // input validation loop
 do
 {
@@ -335,7 +436,7 @@ do
         cin.clear();
         cin.ignore(80, '\n');
     }
-}while(error == 1 || gens<1);
+} while(error == 1 || gens<1);
   
 
     if (writeToFile == true) { //set to true but should ask user at start
@@ -401,8 +502,10 @@ do {
       x = nextGen(x_old);
       x_old = x;
     }
+  }
    
 }
+
 
 void convertNums() {
   int error, selection, error2, num;
@@ -425,8 +528,14 @@ do {
 
 switch(selection) {
 
-case 1 :{cout<<"\n b -d";}
+case 1 :
+{
+// //have user enter the binary
+bitset<SIZE> binaryInput = userMakeFirstGen();
+convertToDecimal(binaryInput);
+}
 break;
+
 case 2 :
 
 //validating the number entered
